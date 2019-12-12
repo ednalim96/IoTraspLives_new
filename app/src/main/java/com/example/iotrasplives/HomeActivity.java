@@ -35,11 +35,17 @@ public class HomeActivity extends AppCompatActivity {
         dref = FirebaseDatabase.getInstance().getReference();
         dref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 status = dataSnapshot.child("Status").getValue().toString();
-                pirstatus.setText(status);
 
-                if(status == "No motion detected"){
+                try {
+                    if (mSwitch.isChecked()) {
+                        pirstatus.setText(status);
+                    } else {
+                        pirstatus.setText("Loading...");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -51,9 +57,18 @@ public class HomeActivity extends AppCompatActivity {
 
         dref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 bpm = dataSnapshot.child("BPM").getValue().toString();
-                pulsebpm.setText(bpm);
+
+                try{
+                    if(mSwitch.isChecked()){
+                        pulsebpm.setText(bpm);
+                    }else{
+                        pulsebpm.setText("Loading...");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -62,18 +77,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        dref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                status = dataSnapshot.child("Status").getValue().toString();
-                camerastatus.setText(status);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         btnLogout = findViewById(R.id.logout);
 
